@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Batch {
+  id        String  @id @default(cuid())
+  sunday    DateTime
+  phones    Phone[]
+  createdAt DateTime @default(now())
+
+  @@unique([sunday])
+}
+
+model Phone {
+  id            String   @id @default(cuid())
+  model         String
+  purchasePrice Int
+  purchaseDate  DateTime
+  salePrice     Int?
+  saleDate      DateTime?
+  isSold        Boolean  @default(false)
+  batch         Batch    @relation(fields: [batchId], references: [id])
+  batchId       String
+  createdAt     DateTime @default(now())
+}
